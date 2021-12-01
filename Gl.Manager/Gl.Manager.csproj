@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Gl.Core.Shared\Gl.Core.Shared.csproj" />
+      <ProjectReference Include="..\Gl.Core\Gl.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.1.1" />
+      <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.5" />
+      <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="4.1.0-1.final" />
+      <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="6.0.0" />
+      <PackageReference Include="Microsoft.Net.Compilers" Version="4.1.0-1.final">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+</Project>
