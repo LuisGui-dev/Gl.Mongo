@@ -1,9 +1,9 @@
 ﻿namespace Gl.Core.Shared.ModelViews.User
 {
-    public class UserView
+    public class UserLoginView
     {
-        public string Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public string Token { get; set; }
     }
 }

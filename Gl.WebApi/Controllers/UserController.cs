@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Gl.Core.Domain;
-using Gl.Core.Shared.ModelViews.User;
+using Gl.Core.Shared.ModelInput.User;
 using Gl.Manager.Interfaces.Manager;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +19,7 @@ namespace Gl.WebApi.Controllers
 
         [HttpGet]
         [Route("Login")]
-        public async Task<IActionResult> Login([FromBody] User user)
+        public async Task<IActionResult> Login([FromBody] UserLogin user)
         {
             var userLogin = await _manager.ValidPasswordAndGenereteToken(user);
             if (userLogin != null)
@@ -28,7 +27,7 @@ namespace Gl.WebApi.Controllers
                 return Ok(userLogin);
             }
 
-            return Unauthorized();
+            return Unauthorized(new { message = "E-mail ou senha inválido" });
         }
 
         [HttpGet]
@@ -38,10 +37,10 @@ namespace Gl.WebApi.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{login}")]
-        public async Task<IActionResult> Get(string login)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
         {
-            var user = await _manager.GetAsync(login);
+            var user = await _manager.GetAsync(id);
             if (user is null)
                 return NotFound(new { message = "Usuário não encontrado" });
             return Ok(user);
@@ -53,13 +52,35 @@ namespace Gl.WebApi.Controllers
             try
             {
                 var userIn = await _manager.InsertAsync(user);
-                return CreatedAtAction(nameof(Get), new { login = user.Login }, userIn);
+                return CreatedAtAction(nameof(Get), new { login = user.Email }, userIn);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 throw;
             }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put([FromBody] NewUser newUser, string id)
+        {
+            if (id != newUser.Id)
+                return BadRequest(new { message = "Usuário não encontrado" });
+            var user = await _manager.GetAsync(id);
+            if(user is null)
+                return BadRequest(new { message = "Usuário não encontrado" });
+            await _manager.UpdateAsync(newUser, id);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var user = await _manager.GetAsync(id);
+            if (user is null)
+                return NotFound(new { message = "Usuário não encontrado" });
+            await _manager.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

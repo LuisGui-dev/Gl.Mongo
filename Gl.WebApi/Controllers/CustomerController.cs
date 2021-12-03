@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Gl.Core.Shared.ModelInput.Customer;
 using Gl.Core.Shared.ModelViews.Customer;
 using Gl.Manager.Interfaces.Manager;
 using Microsoft.AspNetCore.Mvc;
@@ -10,23 +11,23 @@ namespace Gl.WebApi.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private readonly ICustomerManager _customerManager;
+        private readonly ICustomerManager _manager;
 
-        public CustomerController(ICustomerManager customerManager)
+        public CustomerController(ICustomerManager manager)
         {
-            _customerManager = customerManager;
+            _manager = manager;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _customerManager.GetAsync());
+            return Ok(await _manager.GetAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var customer = await _customerManager.GetAsync(id);
+            var customer = await _manager.GetAsync(id);
             if(customer is null)
                 return NotFound(new { message = "Cliente não encontrado" });
             return Ok(customer);
@@ -37,8 +38,8 @@ namespace Gl.WebApi.Controllers
         {
             try
             {
-                var customerIn = await _customerManager.InsertAsync(newCustomer);
-                return CreatedAtAction(nameof(Get), new { id = customerIn.Id }, customerIn);
+                var customer = await _manager.InsertAsync(newCustomer);
+                return CreatedAtAction(nameof(Get), new { id = customer.Id }, customer);
             }
             catch (Exception ex)
             {
@@ -48,24 +49,24 @@ namespace Gl.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromBody] EditCustomer customer, string id)
+        public async Task<IActionResult> Put([FromBody] EditCustomer customerIn, string id)
         {
-            if (id != customer.Id)
+            if (id != customerIn.Id)
                 return BadRequest(new { message = "Cliente não encontrado" });
-            var customerIn = await _customerManager.GetAsync(id);
-            if (customerIn is null)
+            var customer = await _manager.GetAsync(id);
+            if (customer is null)
                 return NotFound(new { message = "Cliente não encontrado" });
-            await _customerManager.UpdateAsync(customer, id);
+            await _manager.UpdateAsync(customerIn, id);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var customerIn = await _customerManager.GetAsync(id);
-            if (customerIn is null)
+            var customer = await _manager.GetAsync(id);
+            if (customer is null)
                 return NotFound(new { message = "Cliente não encontrado" });
-            await _customerManager.DeleteAsync(id);
+            await _manager.DeleteAsync(id);
             return NoContent();
         }
     }

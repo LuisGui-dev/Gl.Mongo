@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Gl.Core.Domain;
+using Gl.Core.Shared.ModelInput.Customer;
 using Gl.Core.Shared.ModelViews.Customer;
 using Gl.Manager.Interfaces.Manager;
 using Gl.Manager.Interfaces.Repositories;

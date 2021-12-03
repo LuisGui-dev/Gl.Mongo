@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Gl.Core.Shared.ModelInput.Customer;
 using Gl.Core.Shared.ModelViews.Customer;
 
 namespace Gl.Manager.Validator.Customer

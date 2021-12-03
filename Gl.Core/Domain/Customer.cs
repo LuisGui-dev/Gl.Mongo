@@ -16,8 +16,9 @@ namespace Gl.Core.Domain
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public bool IsActive { get; set; }
-        public DateTime CreateAt { get; set; }
-        public DateTime? LastUpdate { get; set; }
+        public bool IsActive { get; set; } = true;
+        
+        public DateTime CreateOn { get; set; } = DateTime.Now;
+        public DateTime? UpdateOn { get; set; } = DateTime.Now;
     }
 }

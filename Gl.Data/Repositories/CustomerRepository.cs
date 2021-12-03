@@ -36,15 +36,21 @@ namespace Gl.Data.Repositories
 
         public async Task<Customer> UpdateAsync(Customer customer, string id)
         {
-            var condition = Builders<Customer>.Filter.Eq(x => x.Id, id);
-            await _customerCollection.ReplaceOneAsync(condition, customer);
+            var filter = Builders<Customer>.Filter.Eq(s => s.Id, id);
+            var update = Builders<Customer>.Update
+                .Set(s => s.Name, customer.Name)
+                .Set(s => s.Email, customer.Email)
+                .Set(s => s.Phone, customer.Phone)
+                .Set(s => s.IsActive, customer.IsActive)
+                .CurrentDate(s => s.UpdateOn);
+            await _customerCollection.UpdateOneAsync(filter, update);
             return customer;
         }
 
         public async Task DeleteAsync(string id)
         {
-            var customerObj = await _customerCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
-            if (customerObj == null) return;
+            var customer = await _customerCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+            if (customer == null) return;
             await _customerCollection.DeleteOneAsync(x => x.Id == id);
         }
     }

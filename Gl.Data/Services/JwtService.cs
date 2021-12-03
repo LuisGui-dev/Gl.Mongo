@@ -25,7 +25,7 @@ namespace Gl.Data.Services
             var key = Encoding.ASCII.GetBytes(_configuration.GetSection("JWT:Secret").Value);
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Login)
+                new Claim(ClaimTypes.Name, user.Email)
             };
             var tokenDescriptor = new SecurityTokenDescriptor
             {
